@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+     "test": "vitest",
     "start": "node build/server.js",
     "dev": "tsx watch src/server.ts",
     "build": "tsup src --out-dir build"
@@ -15,9 +16,11 @@
   "dependencies": {
     "@prisma/adapter-pg": "7.3.0",
     "@prisma/client": "7.3.0",
+    "bcryptjs": "3.0.3",
     "dotenv": "17.2.3",
     "fastify": "5.7.1",
     "pg": "8.17.2",
+    "remove": "0.1.5",
     "zod": "4.3.6"
   },
   "devDependencies": {
@@ -26,6 +29,7 @@
     "prisma": "7.3.0",
     "tsup": "8.5.1",
     "tsx": "4.21.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
   }
 }
