@@ -16,7 +16,7 @@
     // and npm install -D @types/node
     "baseUrl": "./",
     "paths": {
-      "@/src/*": ["./src/*"]
+      "@/*": ["./src/*"]
     },
     // Other Outputs
     "sourceMap": true,
