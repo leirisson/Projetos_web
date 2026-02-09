@@ -1,0 +1,11 @@
+.minhaClasse{
+    color: red;
+}
+
+.outraClasse {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f1f1f1;
+    padding: 1rem;
+    border-radius: 5px;
+    border:none;
+}
