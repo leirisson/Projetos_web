@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: fastify-cardapio-api
+    image: postgres:16.10-alpine3.21
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: cardapio
+      POSTGRES_PASSWORD: cardapio_ai123456
+      POSTGRES_DB: pg_cardapio
+      PGDATA: /data/postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./data/pg:/data/postgres
