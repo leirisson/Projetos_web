@@ -1,12 +1,17 @@
-import { StorageProvider } from "../storage-provider";
+import { ParamsUpload, StorageProvider } from "../storage-provider";
 import { supabaseClient } from "@/infra/supabse";
+import { Buffer } from "buffer";
 
 export class UploaddImageRepository implements StorageProvider {
-    async upload(params: { fileName: string; fileBuffer: Buffer; contentType: string; }): Promise<{ url: string; }> {
+    async upload(params: ParamsUpload): Promise<{ url: string; }> {
         
         const { fileName, fileBuffer, contentType } = params
 
+
+
         const nomeUnico = `${Date.now()}-${fileName}`
+
+
         
         const { data, error } = await supabaseClient
         .storage
@@ -19,8 +24,16 @@ export class UploaddImageRepository implements StorageProvider {
         if (error) {
             throw new Error(error.message)
         }
+
+        // recuperam a url publica da imagem
+        const { data: publicUrlData } = await supabaseClient
+        .storage
+        .from('imagens_products')
+        .getPublicUrl(nomeUnico)
+
+  
         return {
-            url: data.path,
+            url: publicUrlData.publicUrl,
         }
     }
     

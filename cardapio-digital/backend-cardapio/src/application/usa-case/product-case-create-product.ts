@@ -7,7 +7,7 @@ export interface ProductUseCaseRequest {
     price: number
     description: string
     category: string
-    imgUrl?: string | undefined
+    imgUrl: string | undefined
 }
 
 interface ProductUseCaseResponse {
@@ -32,7 +32,7 @@ export class ProductCreateUseCase {
             price: request.price,
             description: request.description,
             category: request.category,
-            imgUrl: '',
+            imgUrl: request.imgUrl || '',
         })
 
         return product

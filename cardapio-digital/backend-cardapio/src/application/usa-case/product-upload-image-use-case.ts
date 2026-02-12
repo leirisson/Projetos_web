@@ -1,4 +1,4 @@
-
+import { ParamsUpload } from "@/infra/repositories/storage-provider";
 import { UploaddImageRepository } from "@/infra/repositories/storage/upload-image-repository";
 
 interface ProductUploadImageUseCaseRequest {
@@ -19,6 +19,9 @@ export class ProductUploadImageUseCase {
     ){}
 
     async execute(file: ProductUploadImageUseCaseRequest ): Promise<ProductUploadImageUseCaseResponse> {
-        return await this.uploadImageRepository.upload(file)
+        const { url } = await this.uploadImageRepository.upload(file)
+        return {
+            url,
+        }
     }
 }

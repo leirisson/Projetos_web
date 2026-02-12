@@ -7,9 +7,9 @@ export const app = fastify()
 
 const LIMIT_SIZE_IMAGE = 2 * 1024 * 1024 // 2MB
 app.register(multipart, {
-  limits: {
-    fileSize: LIMIT_SIZE_IMAGE // 2MB
-  },
+  // limits: {
+  //   fileSize: LIMIT_SIZE_IMAGE // 2MB
+  // },
   attachFieldsToBody: true
 })
 
