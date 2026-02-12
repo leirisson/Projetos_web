@@ -1,4 +1,5 @@
 import { PrismaProductRepository } from "@/infra/repositories/prisma-product-repository"
+import { ProductRepository } from "@/infra/repositories/product-repository"
 
 interface ProductUseCaseRequest {
     name: string
@@ -8,16 +9,16 @@ interface ProductUseCaseRequest {
 }
 
 interface ProductUseCaseResponse {
-    id: string
+    id?: string
     name: string
     price: number
     description: string
-    category: string
+    category?: string
 }
 
 
 export class UseCaseCreateProduct {
-    constructor(private productRepository: PrismaProductRepository){} 
+    constructor(private productRepository: ProductRepository){} 
 
     async execute(request: ProductUseCaseRequest): Promise<ProductUseCaseResponse> {
         const product = await this.productRepository.create({
