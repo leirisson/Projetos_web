@@ -1,6 +1,6 @@
-import { Prisma } from '../../../generated/prisma/client'
+import { Prisma } from '../../../../generated/prisma/client'
 import prisma from '@/infra/prisma/index'
-import { ProductRepository } from './product-repository'
+import { ProductRepository } from '../product-repository'
 
 
 export class PrismaProductRepository implements ProductRepository {

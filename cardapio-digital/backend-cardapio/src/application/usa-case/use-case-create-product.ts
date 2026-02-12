@@ -1,4 +1,4 @@
-import { PrismaProductRepository } from "@/infra/repositories/prisma-product-repository"
+import { PrismaProductRepository } from "@/infra/repositories/prisma/prisma-product-repository"
 import { ProductRepository } from "@/infra/repositories/product-repository"
 
 interface ProductUseCaseRequest {
