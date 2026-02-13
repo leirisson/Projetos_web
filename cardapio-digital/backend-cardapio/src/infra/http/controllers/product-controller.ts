@@ -1,15 +1,28 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { ProductCreateUseCase, ProductUseCaseRequest } from '@/application/usa-case/product-case-create-product'
-import { CreateProductError } from '@/domain/errors/create-product-error'
-import { ProductUploadImageUseCase } from "@/application/usa-case/product-upload-image-use-case"
+import { CreateProductUseCase, ProductUseCaseRequest } from '@/usa-case/create-product-use-case'
+import { CreateProductError } from '@/errors/create-product-error'
+import { ProductUploadImageUseCase } from "@/usa-case/product-upload-image-use-case"
 import z from 'zod'
 import '@fastify/multipart'
+import { GetProductsUseCase } from "@/usa-case/get-products-use-case"
+import { UploadImageError } from "@/errors/upload-image-error"
 
 export class ProductController {
     constructor(
-        private productUseCase: ProductCreateUseCase,
+        private createProductUseCase: CreateProductUseCase,
         private productUploadImageUseCase: ProductUploadImageUseCase,
+        private getProductsUseCase: GetProductsUseCase,
     ) { }
+
+    async getProducts(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const products = await this.getProductsUseCase.execute()
+            return reply.status(200).send({ products })
+        } catch (error) {
+            console.error('❌ Error getting products:', error)
+            return reply.status(500).send({ message: 'Internal server error' })
+        }
+    }
 
 
     async create(request: FastifyRequest, reply: FastifyReply) {
@@ -23,7 +36,7 @@ export class ProductController {
             const img = body.file
 
             if (!img) {
-                return reply.status(400).send({ message: 'Image is required' })
+                throw new UploadImageError()
             }
 
             // ✅ usando  método toBuffer() que vem no objeto do multipart
@@ -39,7 +52,7 @@ export class ProductController {
             })
 
             if (!isValid) {
-                return reply.status(400).send({ message: 'Invalid product request' })
+                throw new CreateProductError()
             }
 
             const  url  = await this.uploadProductImage({
@@ -48,9 +61,9 @@ export class ProductController {
                 buffer: convertImgToBuffer
             })
 
-            console.log("url da imagem: "  + url)
+      
 
-            const product = await this.productUseCase.execute({
+            const product = await this.createProductUseCase.execute({
                 name,
                 description,
                 price,
@@ -61,11 +74,13 @@ export class ProductController {
             return reply.status(201).send({ product })
 
         } catch (error) {
-            console.error('❌ Error creating product:', error)
+            if (error instanceof UploadImageError) {
+                return reply.status(400).send({ message: error.message })
+            }
             if (error instanceof CreateProductError) {
                 return reply.status(400).send({ message: error.message })
             }
-            return reply.status(500).send({ message: 'Internal server error' })
+            throw error
         }
     }
 
