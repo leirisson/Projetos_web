@@ -1,4 +1,4 @@
-import { ParamsUpload } from "@/infra/repositories/storage-provider";
+import { ParamsUpload } from "@/infra/repositories/storage-provider-interface";
 import { UploaddImageRepository } from "@/infra/repositories/storage/upload-image-repository";
 
 interface ProductUploadImageUseCaseRequest {

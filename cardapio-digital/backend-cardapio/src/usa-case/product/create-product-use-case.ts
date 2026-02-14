@@ -2,10 +2,11 @@
 import { ErrorCreateProductEmptyUrl } from "@/errors/create-product-empyt-url-error"
 import { ErrorPriceInvalid } from "@/errors/erro-price-invalid"
 import { ErrorNameEmpty } from "@/errors/name-empty-error"
-import { ProductRepository } from "@/infra/repositories/product-repository"
+import { ProductRepository } from "@/infra/repositories/product-repository-interface"
 
 
 export interface ProductUseCaseRequest {
+    id?: string
     name: string
     price: number
     description: string

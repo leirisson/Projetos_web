@@ -1,28 +1,49 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { CreateProductUseCase, ProductUseCaseRequest } from '@/usa-case/create-product-use-case'
+import { CreateProductUseCase, ProductUseCaseRequest } from '@/usa-case/product/create-product-use-case'
 import { CreateProductError } from '@/errors/create-product-error'
-import { ProductUploadImageUseCase } from "@/usa-case/product-upload-image-use-case"
+import { ProductUploadImageUseCase } from "@/usa-case/product/product-upload-image-use-case"
 import z from 'zod'
 import '@fastify/multipart'
-import { GetProductsUseCase } from "@/usa-case/get-products-use-case"
+import { GetAllProductsUseCase } from "@/usa-case/product/get-all-products-use-case"
 import { UploadImageError } from "@/errors/upload-image-error"
+import { GetProductByIdUseCase } from "@/usa-case/product/get-product-bi-id-use-case"
 
 export class ProductController {
     constructor(
         private createProductUseCase: CreateProductUseCase,
         private productUploadImageUseCase: ProductUploadImageUseCase,
-        private getProductsUseCase: GetProductsUseCase,
+        private getAllProductsUseCase: GetAllProductsUseCase,
+        private getProductByIdUseCase: GetProductByIdUseCase,
     ) { }
 
     async getProducts(request: FastifyRequest, reply: FastifyReply) {
         try {
-            const products = await this.getProductsUseCase.execute()
+            const products = await this.getAllProductsUseCase.execute()
             return reply.status(200).send({ products })
         } catch (error) {
             console.error('❌ Error getting products:', error)
             return reply.status(500).send({ message: 'Internal server error' })
         }
     }
+
+    async getProductById(request: FastifyRequest, reply: FastifyReply) {
+        try {
+
+            const idSchema = z.object({
+                id: z.uuid()
+            })
+
+            const { id } = idSchema.parse(request.params)
+
+            const product = await this.getProductByIdUseCase.execute(id)
+
+            return reply.status(200).send({ product })
+        } catch (error) {
+            console.error('❌ Error getting product by id:', error)
+            return reply.status(500).send({ message: 'Internal server error' })
+        }
+    }
+
 
 
     async create(request: FastifyRequest, reply: FastifyReply) {
@@ -55,13 +76,13 @@ export class ProductController {
                 throw new CreateProductError()
             }
 
-            const  url  = await this.uploadProductImage({
+            const url = await this.uploadProductImage({
                 filename: img.filename,
                 mimetype: img.mimetype,
                 buffer: convertImgToBuffer
             })
 
-      
+
 
             const product = await this.createProductUseCase.execute({
                 name,

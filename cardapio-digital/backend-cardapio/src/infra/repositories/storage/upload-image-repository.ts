@@ -1,4 +1,4 @@
-import { ParamsUpload, StorageProvider } from "../storage-provider";
+import { ParamsUpload, StorageProvider } from "../storage-provider-interface";
 import { supabaseClient } from "@/infra/supabse";
 import { Buffer } from "buffer";
 

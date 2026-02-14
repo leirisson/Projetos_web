@@ -1,6 +1,9 @@
 import { it, expect, describe } from 'vitest'
-import { CreateProductUseCase } from '@/usa-case/create-product-use-case'
+import { CreateProductUseCase } from '@/usa-case/product/create-product-use-case'
 import { InMemoryProductRepository } from '@/infra/repositories/in-memory/in-memory-product-repository'
+import { ErrorPriceInvalid } from '@/errors/erro-price-invalid'
+import { ErrorNameEmpty } from '@/errors/name-empty-error'
+import { randomUUID } from 'node:crypto'
 
 const productRepository = new InMemoryProductRepository()
 const createProductUseCase = new CreateProductUseCase(productRepository)
@@ -8,13 +11,14 @@ const createProductUseCase = new CreateProductUseCase(productRepository)
 describe('CreateProductUseCase', () => {
     it('should create a product', async () => {
         const product = await createProductUseCase.execute({
+            id: randomUUID(),
             name: 'Product 1',
             price: 100,
             description: 'Product 1 description',
             category: 'Category 1',
             imgUrl: 'https://example.com/product-1.jpg',
         })
-        expect(product).toBeDefined()
+        expect(product.id).toEqual(expect.any(String))
     })
 
     it('should not create a product with invalid price', async () => {
@@ -24,7 +28,7 @@ describe('CreateProductUseCase', () => {
             description: 'Product 1 description',
             category: 'Category 1',
             imgUrl: 'https://example.com/product-1.jpg',
-        })).rejects.toThrow()
+        })).rejects.toBeInstanceOf(ErrorPriceInvalid)
     })
 
     it('should not create a product with empty name', async () => {
@@ -34,7 +38,7 @@ describe('CreateProductUseCase', () => {
             description: 'Product 1 description',
             category: 'Category 1',
             imgUrl: 'https://example.com/product-1.jpg',
-        })).rejects.toThrow()
+        })).rejects.toBeInstanceOf(ErrorNameEmpty)
     })
 
     it('should not create a product with empty url', async () => {

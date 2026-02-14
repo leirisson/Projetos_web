@@ -15,11 +15,70 @@ model Product {
   category  String
   description String
   imgUrl     String
+  active     Boolean @default(true)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
 }
 
 model Order {
   id        String   @id @default(uuid())
-  total     Float
+  total     Decimal
+  status    OrderStatus @default(PENDING)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items     OrderItem[]
+  payment   payment[]
+}
+
+model OrderItem {
+  id         String  @id @default(uuid())
+
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+
+  quantity   Int
+  unitPrice  Decimal
+  subtotal   Decimal
+
+  createdAt  DateTime @default(now())
+}
+
+model cliente {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  reference String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount    Decimal
+  method    PaymentMethod
+  createdAt DateTime @default(now())
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  MONEY
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  DELIVERED
+  CANCELED
 }

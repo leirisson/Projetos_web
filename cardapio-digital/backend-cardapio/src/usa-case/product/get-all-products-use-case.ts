@@ -1,8 +1,8 @@
-import { ProductRepository } from "@/infra/repositories/product-repository"
+import { ProductRepository } from "@/infra/repositories/product-repository-interface"
 
 
 
-export class GetProductsUseCase {
+export class GetAllProductsUseCase {
     constructor(private productRepository: ProductRepository) {}
 
     async execute() {
