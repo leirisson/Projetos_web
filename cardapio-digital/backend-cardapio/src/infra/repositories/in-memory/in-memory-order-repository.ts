@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 
 
 export class InMemoryOrderRepository implements OrderRepositoryInterface {
-    private orders: Order[] = []
+    public orders: Order[] = []
     async create(data: Order): Promise<Order> {
        const order = {
         id: randomUUID(),
